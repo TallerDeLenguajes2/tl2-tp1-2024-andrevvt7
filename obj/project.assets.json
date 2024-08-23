@@ -1,0 +1,66 @@
+{
+  "version": 3,
+  "targets": {
+    "net7.0": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "net7.0": []
+  },
+  "packageFolders": {
+    "C:\\Users\\Andrea Valdecantos\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\FACET - 2024\\SEGUNDO CUATRIMESTRE\\Taller de lenguajes 2\\TrabajosPracticosTL2\\tl2-tp1-2024-andrevvt7\\tl2-tp1-2024-andrevvt7.csproj",
+      "projectName": "tl2-tp1-2024-andrevvt7",
+      "projectPath": "D:\\FACET - 2024\\SEGUNDO CUATRIMESTRE\\Taller de lenguajes 2\\TrabajosPracticosTL2\\tl2-tp1-2024-andrevvt7\\tl2-tp1-2024-andrevvt7.csproj",
+      "packagesPath": "C:\\Users\\Andrea Valdecantos\\.nuget\\packages\\",
+      "outputPath": "D:\\FACET - 2024\\SEGUNDO CUATRIMESTRE\\Taller de lenguajes 2\\TrabajosPracticosTL2\\tl2-tp1-2024-andrevvt7\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Andrea Valdecantos\\AppData\\Roaming\\NuGet\\NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net7.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net7.0": {
+        "targetAlias": "net7.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
