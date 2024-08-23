@@ -13,6 +13,11 @@ public class Pedido{
     private Cliente? cliente;
     private Estado estado;
 
+        public int Num { get => num; set => num = value; }
+        public string? Observacion { get => observacion; set => observacion = value; }
+        public Cliente? Cliente { get => cliente; set => cliente = value; }
+        public Estado Estado { get => estado; set => estado = value; }
+
     public void verDireccionCliente(){
 
     }
