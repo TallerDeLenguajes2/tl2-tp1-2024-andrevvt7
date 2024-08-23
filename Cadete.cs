@@ -1,4 +1,3 @@
-using System.Text;
 namespace espacioCadeteria{
 public class Cadete{
     private int id;

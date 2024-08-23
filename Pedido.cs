@@ -2,9 +2,9 @@ namespace espacioCadeteria{
 
 public enum Estado
     {
-        Aceptado,
-        Cancelado,
-        Recibido
+        aceptado,
+        cancelado,
+        recibido
     }
 
 public class Pedido{
@@ -18,11 +18,19 @@ public class Pedido{
         public Cliente? Cliente { get => cliente; set => cliente = value; }
         public Estado Estado { get => estado; set => estado = value; }
 
-    public void verDireccionCliente(){
+    public Pedido(int num, string observacion, Estado estado, Cliente cliente)
+        {
+            this.num = num;
+            this.observacion = observacion; 
+            this.estado = estado;
+            this.cliente = new Cliente();
+        }
 
+    public string verDireccionCliente(){
+        return "Dirección: " + cliente.Direccion + " - " + cliente.DatosReferenciaDireccion;
     }
-    public void verDatosCliente(){
-
+    public string verDatosCliente(){
+        return "Nombre: " + cliente.Nombre + " - Teléfono: " + cliente.Telefono;
     }
 }
 }
