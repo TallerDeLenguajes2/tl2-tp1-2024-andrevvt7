@@ -8,31 +8,41 @@ public enum Estado
     }
 
 public class Pedido{
-    private int num;
+    public static int num = 0;
+    private int numero;
     private string? observacion;
-    private Cliente? cliente;
     private Estado estado;
     private float monto;
-
-        public int Num { get => num; set => num = value; }
+    private Cliente? cliente;
+        public int Numero { get => numero; set => numero = value; }
         public string? Observacion { get => observacion; set => observacion = value; }
-        public Cliente? Cliente { get => cliente; set => cliente = value; }
         public Estado Estado { get => estado; set => estado = value; }
         public float Monto { get => monto; set => monto = value; }
+        public Cliente? Cliente { get => cliente; set => cliente = value; }
 
-        public Pedido(int num, string observacion, Estado estado, string nombre, string direccion, string telefono, string datosDireccion)
+        public Pedido(string observacion, Estado estado, float monto, Cliente cliente)
         {
-            this.num = num;
+            num += 1;
+            this.numero = num;
             this.observacion = observacion; 
             this.estado = estado;
+            this.monto = monto;
+            this.cliente = cliente;
+        }
+        public Pedido(string observacion, Estado estado, float monto, string nombre, string direccion, string telefono, string datosDireccion)
+        {
+            num += 1;
+            this.numero = num;
+            this.observacion = observacion; 
+            this.estado = estado;
+            this.monto = monto;
             this.cliente = new Cliente(nombre, direccion, telefono, datosDireccion);
         }
-
     public string verDireccionCliente(){
         return "Dirección: " + cliente.Direccion + " - " + cliente.DatosReferenciaDireccion;
     }
     public string verDatosCliente(){
-        return "Nombre: " + cliente.Nombre + " - Teléfono: " + cliente.Telefono;
+        return "Nombre del cliente: " + cliente.Nombre + " - Teléfono: " + cliente.Telefono;
     }
 }
 }

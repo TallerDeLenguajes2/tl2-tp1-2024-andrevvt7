@@ -46,5 +46,26 @@ namespace espacioCadeteria{
 
             return cadeterias;
         }
+
+        public List<Cliente> cargarClientes(){
+            List<Cliente> clientes = new List<Cliente>();
+            string carpeta = "CSV/";
+            //ReadAllLines retorna un arreglo de strings (cada elemento es una línea del archivo)
+            string[] lineas = File.ReadAllLines(carpeta + ruta); //obtiene todas las líneas del archivo (File es una clase)
+            
+            foreach (var linea in lineas) //por cada línea hacer un split con ; o , para separar los valores
+            {
+                Cliente cliente = new Cliente();
+                var arregloCliente = linea.Split(';').ToList();
+                cliente.Nombre = arregloCliente[0];
+                cliente.Direccion = arregloCliente[1];
+                cliente.Telefono = arregloCliente[2];
+                cliente.DatosReferenciaDireccion = arregloCliente[3];
+
+                clientes.Add(cliente);
+            }
+
+            return clientes;
+        }
     }   
 }
