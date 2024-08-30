@@ -28,10 +28,62 @@ public class Cadete{
             this.nombre = nombre;
             this.telefono = telefono;
             this.direccion = direccion;
-            this.listadoPedidos = new List<Pedido>();
+            listadoPedidos = new List<Pedido>();
         }
-    public float jornalACobrar(){
-        return 0;
-    }
+        public float jornalACobrar(){
+        float monto = 0;
+            foreach (var pedido in listadoPedidos)
+            {
+                if (pedido.Estado == Estado.recibido)
+                {
+                    monto += pedido.Monto;
+                }
+            }
+            return monto;
+        }
+
+        public void cargarPedido(Pedido pedido)
+        {
+            if (!listadoPedidos.Contains(pedido))
+            {
+                listadoPedidos.Add(pedido);
+            } else {
+                Console.WriteLine("\nEl pedido ya estaba cargado");
+            }
+            return;
+        }
+
+        public void eliminarPedido(int numeroPedido)
+        {
+            foreach (var pedido in listadoPedidos)
+            {
+                if (pedido.Num == numeroPedido)
+                {
+                    listadoPedidos.Remove(pedido);
+                    return;
+                }
+            }
+            Console.WriteLine("\nError: El cadete no posee ese pedido");
+        }
+
+        public float montoTotal(){
+            float montoTotal = 0;
+
+            foreach (var pedido in listadoPedidos)
+            {
+                montoTotal += pedido.Monto;
+            } 
+            return montoTotal;
+        }
+
+        public int cantidadEnvios(){
+            int totalEnvios = 0;
+
+            foreach (var pedido in listadoPedidos)
+            {
+                totalEnvios += 1;
+            } 
+            return totalEnvios;
+        }
 }
 }
