@@ -1,5 +1,3 @@
-using Microsoft.Win32.SafeHandles;
-
 namespace espacioDeLaCadeteria;
 
 //CADETE ES PARTE DE UNA CADETERIA
@@ -60,28 +58,7 @@ public class Cadeteria{
             }
         }
 
-        if (pedido == null)
-        {
-            Console.WriteLine("El pedido no está asignado a ningún cadete");
-        }
-
         return pedido;
-    }
-
-    public List<int> ListadoPedidosYaAsignados(){
-        List<int> lista = new List<int>();
-        foreach (var cadete in listadoCadetes)
-        {
-            if (cadete.ListadoPedidos.Count() != 0)
-            {
-                foreach (var pedido in cadete.ListadoPedidos)
-                {
-                    lista.Add(pedido.Numero);
-                }
-            }
-        }
-
-        return lista;
     }
 
     public bool ExistenciaPedido(int numPedido){
@@ -276,12 +253,20 @@ public class Cadeteria{
     }
 
     public List<List<int>> PromedioEnviosPorCadete(){
-
+        
         List<List<int>> promedioEnviosPorCadete = new List<List<int>>();
 
-        foreach (var cadete in listadoCadetes)
+        if (TotalEnviosEnElDia() != 0)
         {
-            promedioEnviosPorCadete.Add([cadete.Id, (from pedido in cadete.ListadoPedidos where pedido.Estado == Estado.entregado select pedido).Count()*100/TotalEnviosEnElDia()]);
+            foreach (var cadete in listadoCadetes)
+            {
+                promedioEnviosPorCadete.Add([cadete.Id, (from pedido in cadete.ListadoPedidos where pedido.Estado == Estado.entregado select pedido).Count()*100/TotalEnviosEnElDia()]);
+            }    
+        } else {
+            foreach (var cadete in listadoCadetes)
+            {
+                promedioEnviosPorCadete.Add([cadete.Id, 0]);
+            }
         }
         
         return promedioEnviosPorCadete;

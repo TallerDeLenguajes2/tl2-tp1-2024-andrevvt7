@@ -3,35 +3,72 @@
 // PARA SABER CUÁNTOS CADETES AGREGAR POR CADETERIA
 Random random = new Random();
 int numeroAleatorio;
+int opcion = 0;
 
 // ACCEDER A LOS DATOS DE TODOS LOS CADETES Y CADETERIAS
 AccesoADatos datos = new AccesoADatos();
 var datosCadetes = datos.ObtenerDatos("cadetes.csv");
 var datosCadeterias = datos.ObtenerDatos("cadeterias.csv");
 
-// _______________________________________________________________________________
+//CREAR CADETERIA CON DATOS ALEATORIOS
+numeroAleatorio = random.Next(1, 11);
+Cadeteria cadeteria = new Cadeteria(datosCadeterias[numeroAleatorio][0], datosCadeterias[numeroAleatorio][1]);
 
-// List<Cadeteria> cadeterias = new List<Cadeteria>();
+//CREAR GESTIÓN PARA CADETERIA
+Gestion gestion = new Gestion(cadeteria);
 
-//CREAR TODAS LAS CADETERIAS (USANDO LOS DATOS DE LAS CADETERÍAS)
-/*foreach (var item in datosCadeterias)
+//AGREGARLE UN NÚMERO ALEATORIO DE CADETES
+numeroAleatorio = random.Next(1, 11);
+for (int i = 0; i < numeroAleatorio; i++) //agregarle 4 cadetes
 {
-    Cadeteria cadeteria = new Cadeteria(item[0], item[1]);
-    cadeterias.Add(cadeteria);
+    cadeteria.AgregarCadete(int.Parse(datosCadetes[i][0]), datosCadetes[i][1], datosCadetes[i][2], datosCadetes[i][3]);
 }
 
-// AGREGAR UNA CANTIDAD ALEATORIA DE CADETES (USANDO LOS DATOS DE LOS CADETES) EN CADA CADETERÍA
-/*foreach (var cadeteria in cadeterias)
+
+Console.Clear();
+do
 {
-    numeroAleatorio = random.Next(1, 11); // PARA SABER CUÁNTOS CADETES AGREGAR POR CADETERIA
-    for (int i = 0; i < numeroAleatorio; i++)
+    Console.ForegroundColor = ConsoleColor.Blue;
+    gestion.MostrarMenu();
+
+    opcion = int.Parse(Console.ReadLine());
+    Console.Clear();
+
+    Console.ForegroundColor = ConsoleColor.Blue;
+    switch (opcion)
     {
-        cadeteria.AgregarCadete(int.Parse(datosCadetes[i][0]), datosCadetes[i][1], datosCadetes[i][2], datosCadetes[i][3]);
+        case 1:
+            gestion.GenerarPedido();
+            break;
+        case 2:
+            gestion.AsignarPedido();
+            break;
+        case 3:
+            gestion.CambiarEstado();
+            break;
+        case 4:
+            gestion.ReasignarPedido();
+            break;
+        case 5:
+            gestion.MostrarInforme();
+            break;
+        case 6:
+            Console.WriteLine("Programa terminado.");
+            break;
+        default:
+            Console.WriteLine("Opción no válida.");
+            Console.Clear();
+            break;
     }
-}*/
+} while (opcion != 6);
 
+Console.WriteLine("\n\nTODO OK\n\n");
+Console.Clear();
 
-//EJEMPLO PRUEBA
+// _______________________________________________________________________________
+
+/*
+//EJEMPLO PRUEBA ANTES DE CREAR EL MENÚ
 //CREAR CADETERIA
 numeroAleatorio = random.Next(1, 11);
 Cadeteria cadeteria1 = new Cadeteria(datosCadeterias[numeroAleatorio][0], datosCadeterias[numeroAleatorio][1]); //crear cadeteria
@@ -126,29 +163,4 @@ Console.WriteLine("\n\n");
 
 // INFORME DE UNA DE LAS CADETERIAS
 cadeteria1.Informe();
-
-//MOSTRAR TODAS LAS CADETERIAS Y SUS CADETES
-/*foreach (var cadeteria in cadeterias)
-{
-    Console.WriteLine($"\nCadeteria {cadeteria.Nombre}");
-    Console.WriteLine("Lista de Cadetes");
-    foreach (var cadete in cadeteria.ListadoCadetes)
-    {
-        Console.WriteLine($"Id: {cadete.Id} | Nombre: {cadete.Nombre} | Dirección: {cadete.Direccion} | Teléfono: {cadete.Telefono}");
-    }
-}
-
-Console.WriteLine("\n\n");
-
-
-/*
-//CARGAR PEDIDOS PARA CADA CADETE
-Pedido pedido1 = new Pedido("obeservacion del pedido 1", "Juan Carlos", "Av. Belgrano", "3814578647", "473");
-Pedido pedido2 = new Pedido("obeservacion del pedido 2", "Juan Pablo", "Av. Mitre", "3814570047", "1200");
-
-cadeterias[0].CrearPedido("obeservacion del pedido a asignar", "Juan Pancho", "Av. Jujuy", "3814522647", "320");
-cadeterias[0].AsignarPedidoACadete(1, 2);
-cadeterias[0].AsignarPedidoACadete(2, 2);
-cadeterias[0].AsignarPedidoACadete(3, 3);
-
-cadeterias[0].Informe();*/
+*/
