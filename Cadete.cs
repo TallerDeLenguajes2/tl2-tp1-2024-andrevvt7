@@ -1,91 +1,51 @@
-namespace espacioCadeteria{
+namespace espacioDeLaCadeteria;
+
+//EL CADETE TIENE O NO UNA LISTA DE PEDIDOS
+//AGREGACIÓN PEDIDO-CADETE: 
+//EL PEDIDO SE CREA FUERA DEL CADETE Y SE LO PASA POR PARÁMETRO AL CONTRUCTOR (O NO)
 public class Cadete{
-    public static int identificador = 0;
+    private int pagoPorPedido = 500;
     private int id;
     private string? nombre;
     private string? direccion;
     private string? telefono;
-    private List<Pedido>? listadoPedidos;
+    private List<Pedido> listadoPedidos;
 
-        public int Id { get => id; set => id = value; }
-        public string? Nombre { get => nombre; set => nombre = value; }
-        public string? Direccion { get => direccion; set => direccion = value; }
-        public string? Telefono { get => telefono; set => telefono = value; }
-        public List<Pedido>? ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
+    public int PagoPorPedido { get => pagoPorPedido; set => pagoPorPedido = value; }
+    public int Id { get => id; set => id = value; }
+    public string? Nombre { get => nombre; set => nombre = value; }
+    public string? Direccion { get => direccion; set => direccion = value; }
+    public string? Telefono { get => telefono; set => telefono = value; }
+    public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
 
-        public Cadete(){}
-//Si ya existe una lista de pedidos
-        public Cadete(string nombre, string direccion, string telefono, List<Pedido> pedidos)
+    public Cadete(){}
+    //CADETES SIN PEDIDOS
+    public Cadete(int id, string nombre, string direccion, string telefono){
+        Id = id;
+        Nombre = nombre;
+        Direccion = direccion;
+        Telefono = telefono;
+        ListadoPedidos = new List<Pedido>(); //LISTA DE PEDIDOS VACÍA
+    }
+
+    //CADETES CON PEDIDOS
+    public Cadete(int id, string nombre, string direccion, string telefono, List<Pedido> listadoPedidos){
+        Id = id;
+        Nombre = nombre;
+        Direccion = direccion;
+        Telefono = telefono;
+        ListadoPedidos = listadoPedidos; //LISTA DE PEDIDOS VACÍA
+    }
+
+    public int JornalACobrar(){
+        int jornal = 0;
+        foreach (var pedido in listadoPedidos)
         {
-            identificador += 1;
-            this.id = identificador;
-            this.nombre = nombre;
-            this.direccion = direccion;
-            this.telefono = telefono;
-            this.ListadoPedidos = pedidos;
-        }
-//Si no existe una lista de pedidos
-        public Cadete(string nombre, string telefono, string direccion)
-        {
-            identificador += 1;
-            this.id = identificador;
-            this.nombre = nombre;
-            this.telefono = telefono;
-            this.direccion = direccion;
-            ListadoPedidos = new List<Pedido>();
-        }
-        public float jornalACobrar(){
-        float monto = 0;
-            foreach (var pedido in ListadoPedidos)
+            if (pedido.Estado == Estado.entregado)
             {
-                if (pedido.Estado == Estado.recibido)
-                {
-                    monto += pedido.Monto;
-                }
-            }
-            return monto;
-        }
-
-        public void cargarPedido(Pedido pedido)
-        {
-            if (!ListadoPedidos.Contains(pedido))
-            {
-                ListadoPedidos.Add(pedido);
-            } else {
-                Console.WriteLine("\nEl pedido ya estaba cargado");
+                jornal += PagoPorPedido;
             }
         }
-
-        public void eliminarPedido(int numeroPedido)
-        {
-            foreach (var pedido in ListadoPedidos)
-            {
-                if (pedido.Numero == numeroPedido)
-                {
-                    ListadoPedidos.Remove(pedido);
-                }
-            }
-            Console.WriteLine("\nError: El cadete no posee ese pedido");
-        }
-
-        public float montoTotal(){
-            float montoTotal = 0;
-
-            foreach (var pedido in ListadoPedidos)
-            {
-                montoTotal += pedido.Monto;
-            } 
-            return montoTotal;
-        }
-
-        public int cantidadEnvios(){
-            int totalEnvios = 0;
-
-            foreach (var pedido in ListadoPedidos)
-            {
-                totalEnvios += 1;
-            } 
-            return totalEnvios;
-        }
-}
+        return jornal;
+    }
 }

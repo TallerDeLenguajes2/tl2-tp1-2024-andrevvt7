@@ -1,48 +1,39 @@
-namespace espacioCadeteria{
+namespace espacioDeLaCadeteria;
 
-public enum Estado
-    {
-        aceptado,
-        cancelado,
-        recibido
-    }
+//CLIENTE ES PARTE DE UN PEDIDO
+//COMPOSICIÓN PEDIDO-CLIENTE: EL CLIENTE SE CREA DENTRO DEL PEDIDO
+public enum Estado{
+    solicitado,
+    entregado,
+    cancelado
+}
 
 public class Pedido{
-    public static int num = 0;
+    private static int num = 0; //para enumerar automáticamente los pedidos
     private int numero;
     private string? observacion;
-    private Estado estado;
-    private float monto;
-    private Cliente? cliente;
-        public int Numero { get => numero; set => numero = value; }
-        public string? Observacion { get => observacion; set => observacion = value; }
-        public Estado Estado { get => estado; set => estado = value; }
-        public float Monto { get => monto; set => monto = value; }
-        public Cliente? Cliente { get => cliente; set => cliente = value; }
+    private Cliente cliente;
+    private Estado estado = Estado.solicitado; //por defecto al crearse
 
-        public Pedido(string observacion, Estado estado, float monto, Cliente cliente)
-        {
-            num += 1;
-            this.numero = num;
-            this.observacion = observacion; 
-            this.estado = estado;
-            this.monto = monto;
-            this.cliente = cliente;
-        }
-        public Pedido(string observacion, Estado estado, float monto, string nombre, string direccion, string telefono, string datosDireccion)
-        {
-            num += 1;
-            this.numero = num;
-            this.observacion = observacion; 
-            this.estado = estado;
-            this.monto = monto;
-            this.cliente = new Cliente(nombre, direccion, telefono, datosDireccion);
-        }
-    public string verDireccionCliente(){
-        return "Dirección: " + cliente.Direccion + " - " + cliente.DatosReferenciaDireccion;
+    public int Numero { get => numero; set => numero = value; }
+    public string? Observacion { get => observacion; set => observacion = value; }
+    public Cliente Cliente { get => cliente; set => cliente = value; }
+    internal Estado Estado { get => estado; set => estado = value; }
+
+    public Pedido(){}
+    //SOLO SE PUEDE CREAR UN PEDIDO SI SE SABEN TODOS LOS DATOS DEL CLIENTE
+    public Pedido(string observacion, string nombreC, string direccionC, string telefonoC, string referenciasC){
+        num++;
+        Numero = num;
+        Observacion = observacion;
+        Cliente = new Cliente(nombreC, direccionC, telefonoC, referenciasC);
     }
-    public string verDatosCliente(){
-        return "Nombre del cliente: " + cliente.Nombre + " - Teléfono: " + cliente.Telefono;
+
+    public string VerDireccionCliente(){
+        return "Dirección del cliente: " + Cliente.Direccion + " " + Cliente.DatosReferenciaDireccion;
     }
-}
+    
+    public string VerDatosCliente(){
+        return $"Datos del cliente -> Nombre: {Cliente.Nombre} | Teléfono: {Cliente.Telefono}";
+    }
 }
