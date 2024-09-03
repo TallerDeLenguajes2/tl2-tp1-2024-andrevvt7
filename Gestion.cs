@@ -63,7 +63,7 @@ public class Gestion{
 
             if (numPedido != null && idCadete != null)
             {
-                cadeteria.AsignarPedidoACadete(numPedido,idCadete);
+                cadeteria.AsignarCadeteAPedido(idCadete, numPedido);
             } else {
                 Console.WriteLine("Debe ingresar todos los datos que se piden");
             }

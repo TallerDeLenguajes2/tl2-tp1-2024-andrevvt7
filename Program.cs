@@ -3,7 +3,7 @@
 // PARA SABER CUÁNTOS CADETES AGREGAR POR CADETERIA
 Random random = new Random();
 int numeroAleatorio;
-int opcion = 0;
+int opcion;
 
 // ACCEDER A LOS DATOS DE TODOS LOS CADETES Y CADETERIAS
 AccesoADatos datos = new AccesoADatos();
@@ -12,6 +12,9 @@ var datosCadeterias = datos.ObtenerDatos("cadeterias.csv");
 
 //CREAR CADETERIA CON DATOS ALEATORIOS
 numeroAleatorio = random.Next(1, 11);
+if (datosCadeterias == null){return;}
+if (datosCadetes == null){return;}
+
 Cadeteria cadeteria = new Cadeteria(datosCadeterias[numeroAleatorio][0], datosCadeterias[numeroAleatorio][1]);
 
 //CREAR GESTIÓN PARA CADETERIA
