@@ -5,7 +5,8 @@ namespace espacioDeLaCadeteria;
 //COMPOSICIÓN CADETE-CADETERIA: EL CADETE SE CREA DENTRO DE LA CADETERIA
 //COMPOSICIÓN PEDIDO-CADETERIA: EL PEDIDO SE CREA DENTRO DE LA CADETERIA
 
-public class Cadeteria{
+public class Cadeteria
+{
     string? nombre;
     string? telefono;
     List<Cadete> listadoCadetes;
@@ -17,72 +18,79 @@ public class Cadeteria{
     public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
     public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
 
-    public Cadeteria(string nombre, string telefono){
+    public Cadeteria(string nombre, string telefono)
+    {
         Nombre = nombre;
         Telefono = telefono;
         listadoCadetes = new List<Cadete>();
     }
 
     //CREAR Y AGREGAR CADETE A LA LISTA DE CADETES
-    public void AgregarCadete(int id, string nombre, string direccion, string telefono){
+    public void AgregarCadete(int id, string nombre, string direccion, string telefono)
+    {
         Cadete cadete = new Cadete(id, nombre, direccion, telefono);
         listadoCadetes.Add(cadete);
     }
-  
+
     //CREAR PEDIDO (por defecto noAsignado -> cadete = null)
-    public void CrearPedido(string observacion, string nombreC, string direccionC, string telefonoC, string referenciasC){
+    public void CrearPedido(string observacion, string nombreC, string direccionC, string telefonoC, string referenciasC)
+    {
         Pedido pedido = new Pedido(observacion, nombreC, direccionC, telefonoC, referenciasC);
-        listadoPedidos.Add(pedido); 
+        listadoPedidos.Add(pedido);
     }
-    public int JornalACobrar(int idCadete){
+    public int JornalACobrar(int idCadete)
+    {
         int jornal = 0;
 
-        if (listadoCadetes.FirstOrDefault(c => c.Id == idCadete) != null)
+        if (ExistenciaCadete(idCadete))
         {
-            foreach (var pedido in listadoPedidos)
-            {
-                if (pedido.Cadete.Id == idCadete)
-                {
-                    jornal += pagoPorPedido;
-                }
-            }
-        } else {
+            jornal = (from pedido in listadoPedidos where pedido.Cadete != null && pedido.Estado == Estado.entregado && pedido.Cadete.Id == idCadete select pedido).Count() * pagoPorPedido;
+        }
+        else
+        {
             Console.WriteLine("El cadete no existe.");
         }
 
         return jornal;
     }
 
-    public bool ExistenciaPedido(int numPedido){
-        if (listadoPedidos.FirstOrDefault(p => p.Numero == numPedido) != null)
-        {
-            return true;
-        } else {
-            return false;
-        }
+    public bool ExistenciaPedido(int numPedido)
+    {
+        return listadoPedidos.Any(p => p.Numero == numPedido);
     }
-    
-    public Pedido ObtenerPedidoPorNumero(int numPedido){
+    public bool ExistenciaCadete(int idCadete)
+    {
+        return listadoCadetes.Any(c => c.Id == idCadete);
+    }
+
+    public Pedido ObtenerPedidoPorNumero(int numPedido)
+    {
         return listadoPedidos.FirstOrDefault(p => p.Numero == numPedido);
     }
-    
-    public Cadete ObtenerCadetePorId(int idCadete){
+
+    public Cadete ObtenerCadetePorId(int idCadete)
+    {
         return ListadoCadetes.FirstOrDefault(c => c.Id == idCadete); //retorna un cadete o un null
     }
-    
-    public Cadete ObtenerCadeteConElPedido(int numPedido){
+
+    public Cadete ObtenerCadeteConElPedido(int numPedido)
+    {
         Cadete cadeteConPedido = null;
         Pedido pedidoDelCadete = ObtenerPedidoPorNumero(numPedido); //si hay pedido con ese número
 
         if (pedidoDelCadete != null && pedidoDelCadete.Estado == Estado.asignado)
         {
-            cadeteConPedido = pedidoDelCadete.Cadete;
+            if (pedidoDelCadete.Cadete != null)
+            {
+                cadeteConPedido = pedidoDelCadete.Cadete;
+            }
         }
 
         return cadeteConPedido;
     }
 
-    public void AsignarCadeteAPedido(int idCadete, int numPedido){
+    public void AsignarCadeteAPedido(int idCadete, int numPedido)
+    {
         Cadete cadeteAAsignar = ObtenerCadetePorId(idCadete);
         Pedido pedidoAAsignar = ObtenerPedidoPorNumero(numPedido);
 
@@ -100,22 +108,25 @@ public class Cadeteria{
 
         //CASOS
         //QUE EL PEDIDO YA TENGA ASIGNADO ALGÚN CADETE
-            //NO HACER NADA
+        //NO HACER NADA
 
         //QUE NO TENGA ASIGNADO NINGÚN CADETE
-            //HACER LA ASIGNACIÓN
+        //HACER LA ASIGNACIÓN
 
         if (pedidoAAsignar.Estado != Estado.noAsignado)
         {
             Console.WriteLine("El pedido ya fue asignado.");
             return;
-        } else {
+        }
+        else
+        {
             pedidoAAsignar.Cadete = cadeteAAsignar;
             pedidoAAsignar.Estado = Estado.asignado;
         }
     }
 
-    public void CambiarEstadoDePedido(int numPedido, string estado){
+    public void CambiarEstadoDePedido(int numPedido, string estado)
+    {
 
         Pedido pedido = ObtenerPedidoPorNumero(numPedido); //si el pedido aún no fue entregado o cancelado
 
@@ -138,12 +149,15 @@ public class Cadeteria{
                 default:
                     break;
             }
-        } else {
+        }
+        else
+        {
             Console.WriteLine("El pedido ya fue entregado, cancelado o aún no se asignó a un cadete. No se puede cambiar su estado");
         }
     }
 
-    public void ReasignarPedidoAOtroCadete(int numPedido, int idCadete){
+    public void ReasignarPedidoAOtroCadete(int numPedido, int idCadete)
+    {
 
         //OBTENER EL PEDIDO QUE SE QUIERE REASIGNAR
         Pedido pedidoAReasignar = ObtenerPedidoPorNumero(numPedido);
@@ -188,168 +202,47 @@ public class Cadeteria{
     - total de envíos
     - cantidad de envíos promedio por cadete.*/
 
-    public int TotalEnviosEnElDia(){ //OK (en teoría)
-        
+    public int TotalEnviosEnElDia()
+    {
+
         int totalEnvios = (from pedido in ListadoPedidos where pedido.Estado == Estado.entregado select pedido).Count();
 
         return totalEnvios;
     }
 
-    public int MontoGanadoEnElDia(){ //OK (en teoría)
-
-        int monto = TotalEnviosEnElDia()*pagoPorPedido;
+    public int MontoGanadoEnElDia()
+    {
+        //int monto = (from cadete in ListadoCadetes select JornalACobrar(cadete.Id)).Sum();
+        int monto = TotalEnviosEnElDia() * pagoPorPedido;
 
         return monto;
     }
 
-    public List<List<int>> EnviosPorCadete(){
+    public List<List<int>> EnviosPorCadete()
+    {
         List<List<int>> enviosPorCadete = new List<List<int>>();
-        List<int> envioDefault;
+        List<int> envio;
 
         foreach (var cadete in listadoCadetes)
         {
-            envioDefault = [cadete.Id, 0];
-            enviosPorCadete.Add(envioDefault);
-        }
-
-        foreach (var pedido in listadoPedidos)
-        {
-            if (pedido.Estado == Estado.entregado)
-            {
-                foreach (var envio in enviosPorCadete)
-                {        
-                    if (envio[0] == pedido.Cadete.Id)
-                    {
-                        envio[1] ++;
-                    }
-                }
-            }
+            envio = [cadete.Id, ((from pedido in ListadoPedidos where pedido.Cadete != null && pedido.Cadete.Id == cadete.Id && pedido.Estado == Estado.entregado select pedido).Count())];
+            enviosPorCadete.Add(envio);
         }
 
         return enviosPorCadete;
     }
 
-    public List<List<int>> PromedioEnviosPorCadete(){
+    public List<List<int>> PromedioEnviosPorCadete()
+    {
         List<List<int>> promedioEnviosPorCadete = new List<List<int>>();
-        
-        if (TotalEnviosEnElDia() != 0)
+        List<int> envioPromedio;
+
+        foreach (var cadete in listadoCadetes)
         {
-            foreach (var envio in EnviosPorCadete())
-            {
-                promedioEnviosPorCadete.Add([envio[0], envio[1]*100/TotalEnviosEnElDia()]);
-            }    
-        } else {
-            foreach (var envio in EnviosPorCadete())
-            {
-                promedioEnviosPorCadete.Add([envio[0], 0]);
-            }
+            envioPromedio = [cadete.Id, TotalEnviosEnElDia() == 0 ? 0 : ((from pedido in ListadoPedidos where pedido.Cadete != null && pedido.Cadete.Id == cadete.Id && pedido.Estado == Estado.entregado select pedido).Count() * 100 / TotalEnviosEnElDia())];
+            promedioEnviosPorCadete.Add(envioPromedio);
         }
-        
+
         return promedioEnviosPorCadete;
     }
-
-    public void Informe(){
-        Console.WriteLine($"Monto ganado en el día: ${MontoGanadoEnElDia()}");
-        Console.WriteLine($"Total de envíos entregados en el día: {TotalEnviosEnElDia()}");
-        Console.WriteLine("Total de envíos entregados en el día por cada cadete: ");
-        foreach (var enviosPorCadete in EnviosPorCadete())
-        {
-            Console.WriteLine($"Cadete {enviosPorCadete[0]} | Envíos: {enviosPorCadete[1]}");
-        }
-        Console.WriteLine("Envíos promedio en el día por cada cadete: ");
-        foreach (var promedioEnviosPorCadete in PromedioEnviosPorCadete())
-        {
-            Console.WriteLine($"Cadete {promedioEnviosPorCadete[0]} | Promedio de envíos: {promedioEnviosPorCadete[1]}%");
-        }
-    }
 }
-
-    // MÉTODOS AGREGADOS
-
-/*    public Pedido ObtenerPedidoSinAsignarPorNum(int numPedido){
-        return listadoPedidos.FirstOrDefault(p => p.Numero == numPedido); //retorna un pediod o un null
-    }
-
-    public Pedido ObtenerPedidoYaAsignado(int numPedido){
-        Pedido pedidoAsignado = null;
-
-        foreach (var pedido in listadoPedidos)
-        {
-            if (pedido.Estado == Estado.entregado)
-            {
-                pedidoAsignado = pedido;
-            }
-            if (pedido != null)
-            {
-                break;
-            }
-        }
-
-        return pedidoAsignado;
-    }
-*/
-    
-
-    /*public void AsignarPedidoACadete(Pedido pedido, int idCadete){
-
-        //AVERIGUAR SI EL PEDIDO EXISTE
-        if (!ExistenciaPedido(pedido.Numero))
-        {
-            Console.WriteLine("El pedido no existe.");
-            return;
-        }
-
-        //AVERIGUAR SI EL CADETE EXISTE
-        Cadete cadeteParaElPedido = ObtenerCadetePorId(idCadete); // CONSEGUIR EL CADETE CON EL ID INGRESADO
-        if (cadeteParaElPedido == null)
-        {
-            Console.WriteLine("El cadete no forma parte de la lista de cadetes.");
-            return;
-        }
-
-        //AVERIGUAR SI EL PEDIDO ESTÁ EN LA LISTA DE PEDIDOS SIN ASIGNAR
-        Pedido pedidoAAsignar = ObtenerPedidoSinAsignarPorNum(pedido.Numero); //para saber si el pedido está asignado o no
-
-        if (pedidoAAsignar == null)
-        {
-            Console.WriteLine("El pedido ya está asignado a algún cadete.");
-            return;
-        }
-
-        cadeteParaElPedido.ListadoPedidos.Add(pedido);
-        listadoPedidos.Remove(pedido);
-        Console.WriteLine("Pedido asignado al cadete con éxito.");
-    }
-
-    // ASIGNACION CON PROBLEMAS
-    public void AsignarPedidoACadete(int numPedido, int idCadete){
-        //AVERIGUAR SI EL PEDIDO EXISTE
-        if (!ExistenciaPedido(numPedido))
-        {
-            Console.WriteLine("El pedido no existe.");
-            return;
-        }
-
-        //AVERIGUAR SI EL CADETE EXISTE
-        Cadete cadeteParaElPedido = ObtenerCadetePorId(idCadete); // CONSEGUIR EL CADETE CON EL ID INGRESADO
-        if (cadeteParaElPedido == null)
-        {
-            Console.WriteLine("El cadete no forma parte de la lista de cadetes.");
-            return;
-        }
-
-        //AVERIGUAR SI EL PEDIDO ESTÁ EN LA LISTA DE PEDIDOS SIN ASIGNAR
-        Pedido pedidoAAsignar = ObtenerPedidoSinAsignarPorNum(numPedido); //para saber si el pedido está asignado o no
-
-        if (pedidoAAsignar == null)
-        {
-            Console.WriteLine("El pedido ya está asignado a algún cadete.");
-            return;
-        }
-
-        cadeteParaElPedido.ListadoPedidos.Add(pedidoAAsignar);
-        listadoPedidos.Remove(pedidoAAsignar);
-        Console.WriteLine("Pedido asignado al cadete con éxito.");
-
-    }
-    */

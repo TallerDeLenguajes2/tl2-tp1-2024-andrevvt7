@@ -1,0 +1,62 @@
+[
+    {
+        "Id": 1,
+        "Nombre": "Juan Pérez",
+        "Direccion": "Calle San Martín 1234",
+        "Telefono": "3814734567"
+    },
+    {
+        "Id": 2,
+        "Nombre": "María González",
+        "Direccion": "Avenida Belgrano 567",
+        "Telefono": "3814812345"
+    },
+    {
+        "Id": 3,
+        "Nombre": "Luis Martínez",
+        "Direccion": "Calle Rivadavia 890",
+        "Telefono": "3814825678"
+    },
+    {
+        "Id": 4,
+        "Nombre": "Sofía Rodríguez",
+        "Direccion": "Avenida Las Heras 4567",
+        "Telefono": "3814912345"
+    },
+    {
+        "Id": 5,
+        "Nombre": "Carlos García",
+        "Direccion": "Calle Mitre 2345",
+        "Telefono": "3814923456"
+    },
+    {
+        "Id": 6,
+        "Nombre": "Ana Fernández",
+        "Direccion": "Pasaje Libertad 678",
+        "Telefono": "3814516789"
+    },
+    {
+        "Id": 7,
+        "Nombre": "Pedro López",
+        "Direccion": "Calle Sarmiento 910",
+        "Telefono": "3814617890"
+    },
+    {
+        "Id": 8,
+        "Nombre": "Laura Ramírez",
+        "Direccion": "Avenida 9 de Julio 123",
+        "Telefono": "3814726789"
+    },
+    {
+        "Id": 9,
+        "Nombre": "José Torres",
+        "Direccion": "Calle Independencia 3456",
+        "Telefono": "3814823456"
+    },
+    {
+        "Id": 10,
+        "Nombre": "Daniela Sánchez",
+        "Direccion": "Calle Mendoza 789",
+        "Telefono": "3814934567"
+    }
+]
