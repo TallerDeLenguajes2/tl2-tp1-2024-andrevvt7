@@ -71,10 +71,10 @@ public class Gestion
         switch (tipoAcceso)
         {
             case 1:
-                cadeterias = accesoADatosCSV.ObtenerDatosCadeterias("cadetes.csv");
+                cadeterias = accesoADatosCSV.ObtenerDatosCadeterias("cadeterias.csv");
                 break;
             case 2:
-                cadeterias = accesoADatosJSON.ObtenerDatosCadeterias("cadetes.json");
+                cadeterias = accesoADatosJSON.ObtenerDatosCadeterias("cadeterias.json");
                 break;
             default:
             break;
