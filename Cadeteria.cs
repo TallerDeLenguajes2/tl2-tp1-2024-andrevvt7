@@ -7,6 +7,8 @@ namespace espacioDeLaCadeteria;
 
 public class Cadeteria
 {
+    static int contCadetes = 0;
+    int cantidadCadetes;
     string? nombre;
     string? telefono;
     List<Cadete> listadoCadetes;
@@ -17,6 +19,7 @@ public class Cadeteria
     public string? Telefono { get => telefono; set => telefono = value; }
     public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
     public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
+    public int CantidadCadetes { get => cantidadCadetes; set => cantidadCadetes = value; }
 
     public Cadeteria(string nombre, string telefono)
     {
@@ -25,19 +28,26 @@ public class Cadeteria
         listadoCadetes = new List<Cadete>();
     }
 
-    //CREAR Y AGREGAR CADETE A LA LISTA DE CADETES
+
+//_________________________________________________________________________________________
+//CREAR Y AGREGAR CADETE A LA LISTA DE CADETES
     public void AgregarCadete(int id, string nombre, string direccion, string telefono)
     {
         Cadete cadete = new Cadete(id, nombre, direccion, telefono);
         listadoCadetes.Add(cadete);
+        contCadetes++;
+        cantidadCadetes = contCadetes;
     }
 
-    //CREAR PEDIDO (por defecto noAsignado -> cadete = null)
+//CREAR PEDIDO Y AGREGARLO A LA LISTA DE PEDIDOS (por defecto noAsignado -> cadete = null)
     public void CrearPedido(string observacion, string nombreC, string direccionC, string telefonoC, string referenciasC)
     {
         Pedido pedido = new Pedido(observacion, nombreC, direccionC, telefonoC, referenciasC);
         listadoPedidos.Add(pedido);
     }
+
+//_________________________________________________________________________________________
+
     public int JornalACobrar(int idCadete)
     {
         int jornal = 0;
@@ -46,14 +56,12 @@ public class Cadeteria
         {
             jornal = (from pedido in listadoPedidos where pedido.Cadete != null && pedido.Estado == Estado.entregado && pedido.Cadete.Id == idCadete select pedido).Count() * pagoPorPedido;
         }
-        else
-        {
-            Console.WriteLine("El cadete no existe.");
-        }
 
         return jornal;
     }
 
+//_________________________________________________________________________________________
+//AUXILIARES
     public bool ExistenciaPedido(int numPedido)
     {
         return listadoPedidos.Any(p => p.Numero == numPedido);
@@ -70,52 +78,26 @@ public class Cadeteria
 
     public Cadete ObtenerCadetePorId(int idCadete)
     {
-        return ListadoCadetes.FirstOrDefault(c => c.Id == idCadete); //retorna un cadete o un null
+        return ListadoCadetes.FirstOrDefault(c => c.Id == idCadete);
     }
 
-    public Cadete ObtenerCadeteConElPedido(int numPedido)
-    {
-        Cadete cadeteConPedido = null;
-        Pedido pedidoDelCadete = ObtenerPedidoPorNumero(numPedido); //si hay pedido con ese número
-
-        if (pedidoDelCadete != null && pedidoDelCadete.Estado == Estado.asignado)
-        {
-            if (pedidoDelCadete.Cadete != null)
-            {
-                cadeteConPedido = pedidoDelCadete.Cadete;
-            }
-        }
-
-        return cadeteConPedido;
-    }
-
+//_________________________________________________________________________________________
+//PARA ASIGNACION, REASIGNACION Y CAMBIO DE ESTADO
     public void AsignarCadeteAPedido(int idCadete, int numPedido)
     {
-        Cadete cadeteAAsignar = ObtenerCadetePorId(idCadete);
-        Pedido pedidoAAsignar = ObtenerPedidoPorNumero(numPedido);
+        Cadete cadeteAAsignar;
+        Pedido pedidoAAsignar;
 
-        if (cadeteAAsignar == null) //si no existe el cadete o el pedido ingresado o ambos
+        if (!ExistenciaCadete(idCadete) || !ExistenciaPedido(numPedido))
         {
-            Console.WriteLine("El cadete no existe.");
             return;
         }
 
-        if (pedidoAAsignar == null)
-        {
-            Console.WriteLine("El pedido no existe.");
-            return;
-        }
-
-        //CASOS
-        //QUE EL PEDIDO YA TENGA ASIGNADO ALGÚN CADETE
-        //NO HACER NADA
-
-        //QUE NO TENGA ASIGNADO NINGÚN CADETE
-        //HACER LA ASIGNACIÓN
+        cadeteAAsignar = ObtenerCadetePorId(idCadete);
+        pedidoAAsignar = ObtenerPedidoPorNumero(numPedido);
 
         if (pedidoAAsignar.Estado != Estado.noAsignado)
         {
-            Console.WriteLine("El pedido ya fue asignado.");
             return;
         }
         else
@@ -127,14 +109,14 @@ public class Cadeteria
 
     public void CambiarEstadoDePedido(int numPedido, string estado)
     {
+        Pedido pedido;
 
-        Pedido pedido = ObtenerPedidoPorNumero(numPedido); //si el pedido aún no fue entregado o cancelado
-
-        if (pedido == null)
+        if (!ExistenciaPedido(numPedido))
         {
-            Console.WriteLine("El pedido no existe.");
             return;
         }
+
+        pedido = ObtenerPedidoPorNumero(numPedido);
 
         if (pedido.Estado == Estado.asignado)
         {
@@ -150,58 +132,40 @@ public class Cadeteria
                     break;
             }
         }
-        else
-        {
-            Console.WriteLine("El pedido ya fue entregado, cancelado o aún no se asignó a un cadete. No se puede cambiar su estado");
-        }
     }
 
     public void ReasignarPedidoAOtroCadete(int numPedido, int idCadete)
     {
 
-        //OBTENER EL PEDIDO QUE SE QUIERE REASIGNAR
-        Pedido pedidoAReasignar = ObtenerPedidoPorNumero(numPedido);
-        //BUSCAR EL CADETE
-        Cadete cadeteParaElPedido = ObtenerCadetePorId(idCadete);
-        // BUSCAR EL CADETE QUE TIENE EL PEDIDO
-        Cadete cadeteConElPedido = ObtenerCadeteConElPedido(numPedido);
+        Cadete cadeteParaElPedido;
+        Pedido pedidoAReasignar;
 
-        if (pedidoAReasignar == null)
+        if (!ExistenciaCadete(idCadete) || !ExistenciaPedido(numPedido))
         {
-            Console.WriteLine("El pedido no existe.");
             return;
         }
 
-        if (cadeteParaElPedido == null)
-        {
-            Console.WriteLine("El cadete no forma parte de la lista de cadetes.");
-            return;
-        }
+        cadeteParaElPedido = ObtenerCadetePorId(idCadete);
+        pedidoAReasignar = ObtenerPedidoPorNumero(numPedido);
 
         if (pedidoAReasignar.Estado == Estado.noAsignado)
         {
-            Console.WriteLine("El pedido aún no fue asignado a ningún cadete.");
             return;
         }
 
         if (pedidoAReasignar.Estado != Estado.asignado)
         {
-            Console.WriteLine("El pedido ya fue cancelado o entregado. No puede reasignarse");
+            return;
         }
         else
         {
             pedidoAReasignar.Cadete = cadeteParaElPedido;
-            Console.WriteLine("Pedido asignado al cadete con éxito.");
         }
     }
 
-    // MÉTODO PARA EL INFORME
-    /*Mostrar un informe de pedidos al finalizar la jornada que incluya:
-    - monto ganado
-    - cantidad de envíos de cada cadete
-    - total de envíos
-    - cantidad de envíos promedio por cadete.*/
 
+//_________________________________________________________________________________________
+//PARA EL INFORME DEL DÍA
     public int TotalEnviosEnElDia()
     {
 

@@ -3,19 +3,20 @@ using espacioDeLaCadeteria;
 public class Gestion
 {
     public static string? bufferString;
-    public static Random aleatorio = new Random();
+    public static Random random = new Random();
+    public static int aleatorio;
+
+    static AccesoADatos accesoADatosCSV = new AccesoCSV();
+    static AccesoADatos accesoADatosJSON = new AccesoJSON();
     Cadeteria cadeteria;
     public Gestion(Cadeteria cadeteria)
     {
         this.cadeteria = cadeteria;
     }
 
-    public void ContinuarGestion()
-    {
-        Console.WriteLine("Presiona cualquier tecla para continuar...");
-        Console.ReadKey();
-        Console.Clear();
-    }
+    //__________________________________________________________________________________________
+    //       LA CARGA DE INFO ALEATORIA Y UNA CANTIDAD ALEATORIA DE CADETES A LA CADETERÍA
+    //__________________________________________________________________________________________
 
     public static int ElegirTipoDeAccesoADatos()
     {
@@ -30,55 +31,87 @@ public class Gestion
         return tipoAcceso;
     }
 
-    public static Cadeteria CargarDatosCadeteria(int tipoAcceso)
+    public static Cadeteria CargarCadeteria(int tipoAcceso)
     {
-        List<Cadeteria>? cadeterias = null;
+        // Obtener todos las cadeterias y cadetes de los archivos
+        List<Cadeteria>? cadeterias = ListaCadeteriasPorAcceso(tipoAcceso);
+        List<Cadete>? cadetes = ListaCadetesPorAcceso(tipoAcceso);
+
+        //cargar info (nombre y teléfono) a la cadeteria
+        Cadeteria cadeteria = CargarInfoACadeteria(cadeterias);
+
+        //cargar cantidad aleatoria de cadetes a la cadeteria
+        CargarCadetesACadeteria(cadeteria, cadetes);
+
+        return cadeteria;
+    }
+
+    public static List<Cadete> ListaCadetesPorAcceso(int tipoAcceso)
+    {
         List<Cadete>? cadetes = null;
-
-        //generar numero aleatorio para elegir de la lista alguna cadeteria al azar
-        int cadeteriaAleatoria = aleatorio.Next(0,10);
-
-        //obtener lista de cadeterias y cadetes según el tipo de acceso
-        AccesoADatos accesoADatosCSV = new AccesoCSV();
-        AccesoADatos accesoADatosJSON = new AccesoJSON();
 
         switch (tipoAcceso)
         {
             case 1:
-                cadeterias = accesoADatosCSV.ObtenerDatosCadeterias("cadeterias.csv");
                 cadetes = accesoADatosCSV.ObtenerDatosCadetes("cadetes.csv");
                 break;
             case 2:
-                cadeterias = accesoADatosJSON.ObtenerDatosCadeterias("cadeterias.json");
                 cadetes = accesoADatosJSON.ObtenerDatosCadetes("cadetes.json");
                 break;
             default:
-                break;
+            break;
         }
 
-        //cargar datos cadeteria
-        Cadeteria cadeteria = new Cadeteria(cadeterias[cadeteriaAleatoria].Nombre,cadeterias[cadeteriaAleatoria].Telefono);
+        return cadetes;
+    }
+    public static List<Cadeteria> ListaCadeteriasPorAcceso(int tipoAcceso)
+    {
+        List<Cadeteria>? cadeterias = null;
 
-        //cargar cantidad aleatoria de cadetes a la cadeteria
-        CargarCadetesACadeteria(cadeteria, cadetes);
-        
+        switch (tipoAcceso)
+        {
+            case 1:
+                cadeterias = accesoADatosCSV.ObtenerDatosCadeterias("cadetes.csv");
+                break;
+            case 2:
+                cadeterias = accesoADatosJSON.ObtenerDatosCadeterias("cadetes.json");
+                break;
+            default:
+            break;
+        }
+
+        return cadeterias;
+    }
+
+
+    public static Cadeteria CargarInfoACadeteria(List<Cadeteria> cadeterias)
+    {
+        aleatorio = random.Next(0, 10);
+        Cadeteria cadeteria = new Cadeteria(cadeterias[aleatorio].Nombre, cadeterias[aleatorio].Telefono);
+
         return cadeteria;
     }
 
-    public static void CargarCadetesACadeteria(Cadeteria cadeteria, List<Cadete> cadetes){
+    public static void CargarCadetesACadeteria(Cadeteria cadeteria, List<Cadete> cadetes)
+    {
         //cargar cantidad aleatoria de cadetes a la cadeteria
-        int cantidadCadetes = aleatorio.Next(1,11);
+        aleatorio = random.Next(1, 11);
 
-        for (int i = 0; i < cantidadCadetes; i++)
+        for (int i = 0; i < aleatorio; i++)
         {
-            cadeteria.AgregarCadete(cadetes[i].Id,cadetes[i].Nombre,cadetes[i].Direccion,cadetes[i].Telefono);
+            cadeteria.AgregarCadete(cadetes[i].Id, cadetes[i].Nombre, cadetes[i].Direccion, cadetes[i].Telefono);
         }
     }
+
+
+    //__________________________________________________________________________________________
+    //                                 EL MENÚ Y SUS OPICONES
+    //__________________________________________________________________________________________
     public void MostrarMenu()
     {
         Console.WriteLine("____________________________________________________");
         Console.WriteLine($"GESTIÓN DE CADETERÍA '{cadeteria.Nombre}'");
-        Console.WriteLine($"(Tenga en cuenta que la cadetería tiene {cadeteria.ListadoCadetes.Count()} cadete/s)\n");
+        Console.WriteLine($"(Tenga en cuenta que la cadetería tiene {cadeteria.CantidadCadetes} cadete/s)\n");
         Console.WriteLine("Elija una opción");
         Console.WriteLine("1. Generar pedido");
         Console.WriteLine("2. Asignar pedido a un cadete");
@@ -88,7 +121,7 @@ public class Gestion
         Console.WriteLine("6. Salir");
         Console.WriteLine("____________________________________________________");
     }
-    public void GenerarPedido()
+    public void MenuOpcionGenerarPedido()
     {
         string? obs, nombre, direccion, tel, refDireccion;
         Console.WriteLine("GENERAR PEDIDO NUEVO.");
@@ -105,7 +138,7 @@ public class Gestion
         Console.WriteLine("Referencias de dirección: ");
         refDireccion = Console.ReadLine();
 
-        if (obs != null && nombre != null && direccion != null && tel != null && refDireccion != null)
+        if (obs != null && nombre != null && direccion != null && tel != null && refDireccion != null && obs.Length != 0 && nombre.Length != 0 && direccion.Length != 0 && refDireccion.Length != 0)
         {
             cadeteria.CrearPedido(obs, nombre, direccion, tel, refDireccion);
         }
@@ -117,18 +150,17 @@ public class Gestion
         ContinuarGestion();
     }
 
-    public void AsignarPedido()
+    public void MenuOpcionAsignarPedido()
     {
-        string? numeroPedido, idDeCadete;
         int numPedido, idCadete;
         Console.WriteLine("ASIGNAR PEDIDO A UN CADETE");
         Console.WriteLine("INGRESE LOS SIGUIENTES DATOS:");
         Console.WriteLine("Número de pedido: ");
-        numeroPedido = Console.ReadLine();
-        numPedido = numeroPedido != "" && numeroPedido != null ? int.Parse(numeroPedido) : -1;
+        bufferString = Console.ReadLine();
+        numPedido = bufferString != "" && bufferString != null ? int.Parse(bufferString) : -1;
         Console.WriteLine("Id de cadete: ");
-        idDeCadete = Console.ReadLine();
-        idCadete = idDeCadete != "" && idDeCadete != null ? int.Parse(idDeCadete) : -1;
+        bufferString = Console.ReadLine();
+        idCadete = bufferString != "" && bufferString != null ? int.Parse(bufferString) : -1;
 
         if (numPedido >= 1 && idCadete >= 1)
         {
@@ -142,15 +174,15 @@ public class Gestion
         ContinuarGestion();
     }
 
-    public void CambiarEstado()
+    public void MenuOpcionCambiarEstado()
     {
-        string? numeroPedido, estado;
+        string? estado;
         int numPedido;
         Console.WriteLine("CAMBIAR ESTADO DE UN PEDIDO");
         Console.WriteLine("INGRESE LOS SIGUIENTES DATOS:");
         Console.WriteLine("Número de pedido: ");
-        numeroPedido = Console.ReadLine();
-        numPedido = numeroPedido != "" && numeroPedido != null ? int.Parse(numeroPedido) : -1;
+        bufferString = Console.ReadLine();
+        numPedido = bufferString != "" && bufferString != null ? int.Parse(bufferString) : -1;
         Console.WriteLine("Estado nuevo (entregado - cancelado): ");
         estado = Console.ReadLine();
 
@@ -166,18 +198,17 @@ public class Gestion
         ContinuarGestion();
     }
 
-    public void ReasignarPedido()
+    public void MenuOpcionReasignarPedido()
     {
-        string? numeroPedido, idDeCadete;
         int numPedido, idCadete;
         Console.WriteLine("REASIGNAR PEDIDO A OTRO CADETE");
         Console.WriteLine("INGRESE LOS SIGUIENTES DATOS:");
         Console.WriteLine("Número de pedido: ");
-        numeroPedido = Console.ReadLine();
-        numPedido = numeroPedido != "" && numeroPedido != null ? int.Parse(numeroPedido) : -1;
+        bufferString = Console.ReadLine();
+        numPedido = bufferString != "" && bufferString != null ? int.Parse(bufferString) : -1;
         Console.WriteLine("Id de cadete: ");
-        idDeCadete = Console.ReadLine();
-        idCadete = idDeCadete != "" && idDeCadete != null ? int.Parse(idDeCadete) : -1;
+        bufferString = Console.ReadLine();
+        idCadete = bufferString != "" && bufferString != null ? int.Parse(bufferString) : -1;
 
         if (numPedido >= 1 && idCadete >= 1)
         {
@@ -191,7 +222,7 @@ public class Gestion
         ContinuarGestion();
     }
 
-    public void MostrarInforme()
+    public void MenuOpcionMostrarInforme()
     {
         Console.WriteLine("INFORME DEL DÍA");
         Console.WriteLine($"Monto ganado en el día: ${cadeteria.MontoGanadoEnElDia()}");
@@ -209,5 +240,11 @@ public class Gestion
         ContinuarGestion();
     }
 
+    public void ContinuarGestion() //OK
+    {
+        Console.WriteLine("Presiona cualquier tecla para continuar...");
+        Console.ReadKey();
+        Console.Clear();
+    }
 
 }

@@ -4,7 +4,7 @@ int opcionMenu, tipoAcceso;
 string? bufferString;
 
 tipoAcceso = Gestion.ElegirTipoDeAccesoADatos(); //elección del tipo de acceso
-Cadeteria cadeteria = Gestion.CargarDatosCadeteria(tipoAcceso); //creación y carga de datos (sus datos y el de los cadetes) de la cadetería
+Cadeteria cadeteria = Gestion.CargarCadeteria(tipoAcceso); //creación y carga de datos (sus datos y el de los cadetes) de la cadetería
 Gestion gestion = new Gestion(cadeteria); //para gestionar el menú según la cadetería creada
 
 
@@ -24,19 +24,19 @@ do
     switch (opcionMenu)
     {
         case 1:
-            gestion.GenerarPedido();
+            gestion.MenuOpcionGenerarPedido();
             break;
         case 2:
-            gestion.AsignarPedido();
+            gestion.MenuOpcionAsignarPedido();
             break;
         case 3:
-            gestion.CambiarEstado();
+            gestion.MenuOpcionCambiarEstado();
             break;
         case 4:
-            gestion.ReasignarPedido();
+            gestion.MenuOpcionReasignarPedido();
             break;
         case 5:
-            gestion.MostrarInforme();
+            gestion.MenuOpcionMostrarInforme();
             break;
         case 6:
             break;
