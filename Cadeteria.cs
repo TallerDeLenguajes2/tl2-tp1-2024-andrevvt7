@@ -7,8 +7,7 @@ namespace espacioDeLaCadeteria;
 
 public class Cadeteria
 {
-    static int contCadetes = 0;
-    int cantidadCadetes;
+    public int CantidadCadetes { get => listadoCadetes.Count; }
     string? nombre;
     string? telefono;
     List<Cadete> listadoCadetes;
@@ -17,7 +16,6 @@ public class Cadeteria
 
     public string? Nombre { get => nombre; set => nombre = value; }
     public string? Telefono { get => telefono; set => telefono = value; }
-    public int CantidadCadetes { get => cantidadCadetes; set => cantidadCadetes = value; }
 
     public Cadeteria(string nombre, string telefono)
     {
@@ -33,8 +31,6 @@ public class Cadeteria
     {
         Cadete cadete = new Cadete(id, nombre, direccion, telefono);
         listadoCadetes.Add(cadete);
-        contCadetes++;
-        cantidadCadetes = contCadetes;
     }
 
 //CREAR PEDIDO Y AGREGARLO A LA LISTA DE PEDIDOS (por defecto noAsignado -> cadete = null)
