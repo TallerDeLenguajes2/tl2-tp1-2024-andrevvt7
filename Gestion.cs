@@ -224,23 +224,24 @@ public class Gestion
 
     public void MenuOpcionMostrarInforme()
     {
+        Informe informe = cadeteria.GenerarInforme();
         Console.WriteLine("INFORME DEL DÍA");
-        Console.WriteLine($"Monto ganado en el día: ${cadeteria.MontoGanadoEnElDia()}");
-        Console.WriteLine($"Total de envíos entregados en el día: {cadeteria.TotalEnviosEnElDia()}");
+        Console.WriteLine($"Monto ganado en el día: ${informe.totalEnviosEnElDia}");
+        Console.WriteLine($"Total de envíos entregados en el día: {informe.montoGanadoEnElDia}");
         Console.WriteLine("Total de envíos entregados en el día por cada cadete: ");
-        foreach (var enviosPorCadete in cadeteria.EnviosPorCadete())
+        foreach (var enviosPorCadete in informe.enviosPorCadete)
         {
             Console.WriteLine($"Cadete {enviosPorCadete[0]} | Envíos: {enviosPorCadete[1]}");
         }
         Console.WriteLine("Envíos promedio en el día por cada cadete: ");
-        foreach (var promedioEnviosPorCadete in cadeteria.PromedioEnviosPorCadete())
+        foreach (var promedioEnviosPorCadete in informe.promedioEnviosPorCadete)
         {
             Console.WriteLine($"Cadete {promedioEnviosPorCadete[0]} | Promedio de envíos: {promedioEnviosPorCadete[1]}%");
         }
         ContinuarGestion();
     }
 
-    public void ContinuarGestion() //OK
+    public void ContinuarGestion()
     {
         Console.WriteLine("Presiona cualquier tecla para continuar...");
         Console.ReadKey();

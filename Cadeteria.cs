@@ -13,6 +13,7 @@ public class Cadeteria
     List<Cadete> listadoCadetes;
     List<Pedido> listadoPedidos = new List<Pedido>();
     const int pagoPorPedido = 500;
+    public Informe informe;
 
     public string? Nombre { get => nombre; set => nombre = value; }
     public string? Telefono { get => telefono; set => telefono = value; }
@@ -22,6 +23,7 @@ public class Cadeteria
         Nombre = nombre;
         Telefono = telefono;
         listadoCadetes = new List<Cadete>();
+        informe = new Informe(TotalEnviosEnElDia(),MontoGanadoEnElDia(), EnviosPorCadete(), PromedioEnviosPorCadete());
     }
 
 
@@ -179,7 +181,7 @@ public class Cadeteria
     public List<List<int>> EnviosPorCadete()
     {
         List<List<int>> enviosPorCadete = new List<List<int>>();
-        List<int> envio;
+        List<int> envio = new List<int>();
 
         foreach (var cadete in listadoCadetes)
         {
@@ -193,7 +195,7 @@ public class Cadeteria
     public List<List<int>> PromedioEnviosPorCadete()
     {
         List<List<int>> promedioEnviosPorCadete = new List<List<int>>();
-        List<int> envioPromedio;
+        List<int> envioPromedio = new List<int>();
 
         foreach (var cadete in listadoCadetes)
         {
@@ -202,5 +204,9 @@ public class Cadeteria
         }
 
         return promedioEnviosPorCadete;
+    }
+
+    public Informe GenerarInforme(){
+        return new Informe(TotalEnviosEnElDia(),MontoGanadoEnElDia(), EnviosPorCadete(), PromedioEnviosPorCadete());
     }
 }
