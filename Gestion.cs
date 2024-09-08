@@ -15,7 +15,7 @@ public class Gestion
     }
 
     //__________________________________________________________________________________________
-    //       LA CARGA DE INFO ALEATORIA Y UNA CANTIDAD ALEATORIA DE CADETES A LA CADETERÍA
+    //         CARGA DE INFO ALEATORIA Y UNA CANTIDAD ALEATORIA DE CADETES A LA CADETERÍA
     //__________________________________________________________________________________________
 
     public static int ElegirTipoDeAccesoADatos()
@@ -71,10 +71,10 @@ public class Gestion
         switch (tipoAcceso)
         {
             case 1:
-                cadeterias = accesoADatosCSV.ObtenerDatosCadeterias("cadeterias.csv");
+                cadeterias = accesoADatosCSV.ObtenerDatosCadeterias("cadetes.csv");
                 break;
             case 2:
-                cadeterias = accesoADatosJSON.ObtenerDatosCadeterias("cadeterias.json");
+                cadeterias = accesoADatosJSON.ObtenerDatosCadeterias("cadetes.json");
                 break;
             default:
             break;

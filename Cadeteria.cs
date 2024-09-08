@@ -13,12 +13,10 @@ public class Cadeteria
     string? telefono;
     List<Cadete> listadoCadetes;
     List<Pedido> listadoPedidos = new List<Pedido>();
-    int pagoPorPedido = 500;
+    const int pagoPorPedido = 500;
 
     public string? Nombre { get => nombre; set => nombre = value; }
     public string? Telefono { get => telefono; set => telefono = value; }
-    public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
-    public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
     public int CantidadCadetes { get => cantidadCadetes; set => cantidadCadetes = value; }
 
     public Cadeteria(string nombre, string telefono)
@@ -78,7 +76,7 @@ public class Cadeteria
 
     public Cadete ObtenerCadetePorId(int idCadete)
     {
-        return ListadoCadetes.FirstOrDefault(c => c.Id == idCadete);
+        return listadoCadetes.FirstOrDefault(c => c.Id == idCadete);
     }
 
 //_________________________________________________________________________________________
@@ -169,7 +167,7 @@ public class Cadeteria
     public int TotalEnviosEnElDia()
     {
 
-        int totalEnvios = (from pedido in ListadoPedidos where pedido.Estado == Estado.entregado select pedido).Count();
+        int totalEnvios = (from pedido in listadoPedidos where pedido.Estado == Estado.entregado select pedido).Count();
 
         return totalEnvios;
     }
@@ -189,7 +187,7 @@ public class Cadeteria
 
         foreach (var cadete in listadoCadetes)
         {
-            envio = [cadete.Id, ((from pedido in ListadoPedidos where pedido.Cadete != null && pedido.Cadete.Id == cadete.Id && pedido.Estado == Estado.entregado select pedido).Count())];
+            envio = [cadete.Id, ((from pedido in listadoPedidos where pedido.Cadete != null && pedido.Cadete.Id == cadete.Id && pedido.Estado == Estado.entregado select pedido).Count())];
             enviosPorCadete.Add(envio);
         }
 
@@ -203,7 +201,7 @@ public class Cadeteria
 
         foreach (var cadete in listadoCadetes)
         {
-            envioPromedio = [cadete.Id, TotalEnviosEnElDia() == 0 ? 0 : ((from pedido in ListadoPedidos where pedido.Cadete != null && pedido.Cadete.Id == cadete.Id && pedido.Estado == Estado.entregado select pedido).Count() * 100 / TotalEnviosEnElDia())];
+            envioPromedio = [cadete.Id, TotalEnviosEnElDia() == 0 ? 0 : ((from pedido in listadoPedidos where pedido.Cadete != null && pedido.Cadete.Id == cadete.Id && pedido.Estado == Estado.entregado select pedido).Count() * 100 / TotalEnviosEnElDia())];
             promedioEnviosPorCadete.Add(envioPromedio);
         }
 
